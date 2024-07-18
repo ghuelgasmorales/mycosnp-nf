@@ -124,7 +124,7 @@ include { GATK4_COMBINEGVCFS          } from '../modules/nf-core/modules/gatk4/c
 include { SEQKIT_REPLACE              } from '../modules/nf-core/modules/seqkit/replace/main'
 include { SNPDISTS                    } from '../modules/nf-core/modules/snpdists/main'
 include { GATK4_LOCALCOMBINEGVCFS     } from '../modules/local/gatk4_localcombinegvcfs.nf'
-
+include { GATK4_LOCALCOMBINEGVCFS_MERGE} from '../modules/local/gatk4_localcombinegvcfs_merge.nf'
 /*
 ========================================================================================
     RUN MAIN WORKFLOW
@@ -304,21 +304,42 @@ workflow MYCOSNP {
         
         ch_vcfs = ch_vcf.mix(ch_vcf_idx).collect()
 
+        // Merge VCF files and their corresponding index files
+        ch_vcf_merged = ch_vcf.merge(ch_vcf_idx)
+
+        // Batch the merged VCF and index files
+        def batchSize = 10
+        ch_vcf_batches = ch_vcf_merged.flatten().collate(batchSize)
+
+        // Debugging outputs to check grouping
+        ch_vcf_batches.view { "VCF Batch: $it" }
+
         GATK4_LOCALCOMBINEGVCFS(
+                [single_end: false],
+                ch_vcf_batches,
+                fas_file,
+                fai_file,
+                dict_file
+            )
+
+        ch_vcf_combine= Channel.empty().mix(GATK4_LOCALCOMBINEGVCFS.out.gvcf,GATK4_LOCALCOMBINEGVCFS.out.tbi).collect()
+        
+        GATK4_LOCALCOMBINEGVCFS_MERGE(
                                     [id:'combined', single_end:false],
-                                    ch_vcfs,
+                                    ch_vcf_combine,
                                     fas_file, 
                                     fai_file, 
                                     dict_file)
+        
 
         GATK_VARIANTS( 
                         fas_file, 
                         fai_file, 
                         bai_file, 
                         dict_file,
-                        GATK4_LOCALCOMBINEGVCFS.out.combined_gvcf.map{meta, vcf, tbi->[ meta ]}, 
-                        GATK4_LOCALCOMBINEGVCFS.out.gvcf, 
-                        GATK4_LOCALCOMBINEGVCFS.out.tbi 
+                        GATK4_LOCALCOMBINEGVCFS_MERGE.out.combined_gvcf.map{meta, vcf, tbi->[ meta ]}, 
+                        GATK4_LOCALCOMBINEGVCFS_MERGE.out.gvcf, 
+                        GATK4_LOCALCOMBINEGVCFS_MERGE.out.tbi 
                     )
         
 
