@@ -308,7 +308,7 @@ workflow MYCOSNP {
         ch_vcf_merged = ch_vcf.merge(ch_vcf_idx)
 
         // Batch the merged VCF and index files
-        def batchSize = 10
+        def batchSize = 200
         ch_vcf_batches = ch_vcf_merged.flatten().collate(batchSize)
 
         // Debugging outputs to check grouping
