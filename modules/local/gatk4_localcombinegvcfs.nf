@@ -1,6 +1,6 @@
 process GATK4_LOCALCOMBINEGVCFS {
-    tag "merged"
-    label 'process_medium'
+    tag "combined"
+    label 'process_low'
 
     conda (params.enable_conda ? "bioconda::gatk4=4.2.5.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -26,9 +26,7 @@ process GATK4_LOCALCOMBINEGVCFS {
     script:
     def args = task.ext.args ?: ''
     def avail_mem       = 3
-    def prefix = task.name ?: "merged-${UUID.randomUUID().toString()}"
-    def sleep_time = 0 // Sleep time in seconds
-
+    def prefix = task.ext.prefix ?: "${meta.id}"
     if (!task.memory) {
         log.info '[GATK COMBINEGVCFS] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
@@ -78,11 +76,6 @@ process GATK4_LOCALCOMBINEGVCFS {
           -O ${prefix}.combined.g.vcf.gz \\
           ${args} \\
           ${input_files}
-
-    echo "Sleeping for ${sleep_time} seconds..."
-    sleep ${sleep_time}
-    echo "Woke up!"
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
