@@ -45,6 +45,7 @@ process SNPEFF_BUILD {
         -Xmx${avail_mem}g \\
         build \\
         -config snpeff.config \\
+        -noLog \\
         -dataDir ./snpeff_db \\
         -gff3 \\
         -v \\

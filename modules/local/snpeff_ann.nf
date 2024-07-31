@@ -39,7 +39,7 @@ process SNPEFF_ANN {
         ${fasta.baseName} \\
         -config $config \\
         -dataDir $db \\
-        -nolog \\ 
+        -noLog \\ 
         $args \\
         $vcf \\
         -csvStats ${prefix}.snpeff.csv \\

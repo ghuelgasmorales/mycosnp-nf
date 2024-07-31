@@ -35,6 +35,7 @@ process SNPEFF {
         -Xmx${avail_mem}g \\
         $args \\
         -v $species \\
+        -noLog \\
         -csvStats ${prefix}.csv \\
         $vcf \\
         > ${prefix}.ann.vcf
