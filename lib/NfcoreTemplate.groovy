@@ -3,6 +3,8 @@
 //
 
 import org.yaml.snakeyaml.Yaml
+import groovy.json.JsonOutput
+import nextflow.extension.FilesEx
 
 class NfcoreTemplate {
 
