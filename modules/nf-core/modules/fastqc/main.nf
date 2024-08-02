@@ -19,12 +19,9 @@ process FASTQC {
     def args = task.ext.args ?: ''
     // Add soft-links to original FastQs for consistent naming in pipeline
     def prefix = task.ext.prefix ?: "${meta.id}"
-    """
-    mkdir tmp
-    """
-    
     if (meta.single_end) {
         """
+        mkdir tmp
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         fastqc $args --threads $task.cpus ${prefix}.fastq.gz
 
@@ -35,6 +32,7 @@ process FASTQC {
         """
     } else {
         """
+        mkdir tmp
         [ ! -f  ${prefix}_1.fastq.gz ] && ln -s ${reads[0]} ${prefix}_1.fastq.gz
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         fastqc $args --threads $task.cpus ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz
