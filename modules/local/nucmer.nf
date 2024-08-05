@@ -46,7 +46,7 @@ process NUCMER {
         --coords \\
         $args \\
         reference.fasta \\
-        query.fasta
+        query.fasta > nucmer_capture.output 2> nucmer_capture.error
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
