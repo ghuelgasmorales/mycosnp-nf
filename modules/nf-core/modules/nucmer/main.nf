@@ -34,13 +34,18 @@ process NUCMER {
     fi
 
     mkdir nucmer
+
+    cp $fasta_name_ref nucmer/reference.fasta
+    cp $fasta_name_query nucmer/query.fasta
+
+    cd nucmer
     
     nucmer \\
         -p $prefix \\
         --coords \\
         $args \\
-        $fasta_name_ref \\
-        $fasta_name_query
+        reference.fasta \\
+        query.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
