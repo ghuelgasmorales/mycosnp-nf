@@ -4,7 +4,7 @@
 ========================================================================================
 */
 
-include { NUCMER                          } from '../../modules/nf-core/modules/nucmer/main'
+include { NUCMER                          } from '../../modules/local/nucmer.nf'
 include { COORDSTOBED                     } from '../../modules/local/coordstobed.nf'
 include { BEDTOOLS_MASKFASTA              } from '../../modules/nf-core/modules/bedtools/maskfasta/main'
 include { BWA_INDEX                       } from '../../modules/nf-core/modules/bwa/index/main'
