@@ -41,7 +41,6 @@ process NUCMER {
     cd nucmer
     
     nucmer \\
-        -p $prefix \\
         --coords \\
         $args \\
         reference.fasta \\
