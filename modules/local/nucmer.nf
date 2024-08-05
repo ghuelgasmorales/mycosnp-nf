@@ -11,8 +11,8 @@ process NUCMER {
     tuple val(meta), path(ref), path(query)
 
     output:
-    tuple val(meta), path("*.delta") , emit: delta
-    tuple val(meta), path("*.coords"), emit: coords
+    tuple val(meta), path("nucmer/*.delta") , emit: delta
+    tuple val(meta), path("nucmer/*.coords"), emit: coords
     path "versions.yml"              , emit: versions
 
     when:
