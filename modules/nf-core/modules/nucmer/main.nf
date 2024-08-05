@@ -33,6 +33,8 @@ process NUCMER {
         gzip -c -d $query > $fasta_name_query
     fi
 
+    mkdir nucmer
+    
     nucmer \\
         -p $prefix \\
         --coords \\
