@@ -38,7 +38,8 @@ process NUCMER {
     cp $fasta_name_ref nucmer/reference.fasta
     cp $fasta_name_query nucmer/query.fasta
 
-    cd nucmer chmod -R 777 *
+    cd nucmer
+    chmod -R 777 *
     
     nucmer \\
         -p $prefix \\
