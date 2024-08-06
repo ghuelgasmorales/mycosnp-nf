@@ -13,7 +13,7 @@ process NUCMER {
     output:
     tuple val(meta), path("nucmer/*.delta") , emit: delta
     tuple val(meta), path("nucmer/*.coords"), emit: coords
-    path "versions.yml"              , emit: versions
+    path "nucmer/versions.yml"              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
