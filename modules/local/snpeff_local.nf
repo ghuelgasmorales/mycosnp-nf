@@ -35,7 +35,7 @@ process SNPEFF {
     snpEff \\
         -Xmx${avail_mem}g \\
         $args \\
-        -config ${snpeffconfig}/snpeff.config \\
+        -config ${snpeffconfig}/snpEff.config \\
         -v $species \\
         -noLog \\
         -csvStats ${prefix}.csv \\
