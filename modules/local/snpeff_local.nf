@@ -31,7 +31,10 @@ process SNPEFF {
         avail_mem = task.memory.giga
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
+    
     """
+    ls -laR
+
     snpEff \\
         -Xmx${avail_mem}g \\
         $args \\
