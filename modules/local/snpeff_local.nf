@@ -33,7 +33,6 @@ process SNPEFF {
     def prefix = task.ext.prefix ?: "${meta.id}"
     
     """
-    ls -laR
 
     snpEff \\
         -Xmx${avail_mem}g \\
