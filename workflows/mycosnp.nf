@@ -106,6 +106,8 @@ include { GATK_VARIANTS      } from '../subworkflows/local/gatk-variants'
 include { CREATE_PHYLOGENY   } from '../subworkflows/local/phylogeny'
 include { SNPEFF_BUILD       } from '../subworkflows/local/snpeff_build'
 include { SNPEFF             } from '../subworkflows/local/snpeff'
+include { QC_PARSER          } from '../modules/local/qc_parser'
+
 /*
 ========================================================================================
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -262,6 +264,11 @@ workflow MYCOSNP {
     QC_REPORTSHEET (
         ch_qcreportsheet
     )
+
+    // Conditionally run QC_PARSER if param.amdp is true
+    if (params.amdp) {
+        QC_PARSER(QC_REPORTSHEET.out.qc_reportsheet)
+    }
 
 /*
 ========================================================================================
