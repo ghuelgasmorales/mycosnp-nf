@@ -10,26 +10,25 @@ import sys
 import argparse
 import pandas as pd
 
-
 def parse_thresholds(threshold_str):
     """Parse and validate the QC thresholds provided as a string."""
     try:
         parts = threshold_str.split(',')
         if len(parts) != 4:
             raise ValueError(
-                "Thresholds must be in the format 'gc_min-gc_max,coverage,depth,qscore'"
+                "Thresholds must be 'GCrangePct:min-max,AvgQscore:#,RefLenCov:#,MeanCovDepth:#'"
             )
 
+        # Extract the numbers for each threshold
+        gc_range_str, coverage_str, depth_str, qscore_str = [part.split(':')[1] for part in parts]
+
         # Parse the GC range
-        gc_range_str = parts[0]
         gc_range = list(map(float, gc_range_str.split('-')))
         if len(gc_range) != 2:
             raise ValueError("GC range must have exactly two values separated by a dash ('-').")
 
         # Parse the other thresholds
-        coverage_threshold = float(parts[1])
-        depth_threshold = float(parts[2])
-        qscore_threshold = float(parts[3])
+        coverage_threshold, depth_threshold, qscore_threshold = map(float, [coverage_str, depth_str, qscore_str])
 
         return gc_range, coverage_threshold, depth_threshold, qscore_threshold
     except ValueError as value_error:
@@ -38,7 +37,7 @@ def parse_thresholds(threshold_str):
 
 
 def evaluate_qc(row, gc_range, coverage_threshold, depth_threshold, qscore_threshold):
-    """Evaluate QC metrics for a single sample against the specified thresholds."""
+    """Evaluate QC metrics for a single sample against the qc thresholds."""
     print(f"Evaluating QC for sample {row['Sample Name']}")
     if not gc_range[0] <= row['GC After Trimming'] <= gc_range[1]:
         print(f"GC After Trimming {row['GC After Trimming']} is out of range {gc_range}")
@@ -65,7 +64,7 @@ def main():
     parser.add_argument(
         '-qc_thresholds',
         required=True,
-        help='QC thresholds in the format "gc_min-gc_max,coverage,depth,qscore"',
+        help='QC thresholds format "GCrangePct:min-max,AvgQscore:#,RefLenCov:#,MeanCovDepth:#"',
     )
     args = parser.parse_args()
 
